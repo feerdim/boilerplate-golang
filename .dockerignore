@@ -1,0 +1,17 @@
+.DS_Store
+
+.vscode/
+.idea/
+
+bin/
+build/
+tmp/
+
+*.out
+*.code-workspace
+test_coverage.html
+
+credentials/
+vendor/
+.env
+Makefile

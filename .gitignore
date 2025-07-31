@@ -1,0 +1,21 @@
+.DS_Store
+
+# IDE related
+.vscode/
+.idea/
+
+# Dev build
+bin/
+build/
+tmp/
+
+# Test
+*.out
+*.code-workspace
+test_coverage.html
+
+# Env variables
+# credentials/
+vendor/
+.env
+Makefile

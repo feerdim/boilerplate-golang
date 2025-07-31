@@ -1,0 +1,28 @@
+package application
+
+const (
+	msgFailedGetProfile                   = "Failed get profile"
+	msgFailedLogin                        = "Failed login"
+	msgFailedLoginSSO                     = "Failed login sso"
+	msgFailedLogout                       = "Failed logout"
+	msgFailedRefreshToken                 = "Failed refresh token"
+	msgFailedRegister                     = "Failed register"
+	msgFailedResetPassword                = "Failed reset password"
+	msgFailedSendForgotPasswordLink       = "Failed send forgot password link"
+	msgFailedSendUserVerification         = "Failed send verification link"
+	msgFailedUpdateProfile                = "Failed update profile"
+	msgFailedUserAlreadyVerified          = "Your account is already verified"
+	msgFailedValidateForgotPasswordToken  = "Forgot password link is invalid"
+	msgFailedVerifyUser                   = "Failed verification"
+	msgSuccessGetProfile                  = "Success get profile"
+	msgSuccessLogin                       = "Success login"
+	msgSuccessLogout                      = "Success logout"
+	msgSuccessRefreshToken                = "Success refresh token"
+	msgSuccessRegister                    = "Success register"
+	msgSuccessResetPassword               = "Success reset password"
+	msgSuccessSendForgotPasswordLink      = "Success send forgot password link"
+	msgSuccessSendUserVerification        = "Success send verification link"
+	msgSuccessUpdateProfile               = "Success update profile"
+	msgSuccessValidateForgotPasswordToken = "Forgot password link valid"
+	msgSuccessVerifyUser                  = "Success verification"
+)

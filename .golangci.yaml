@@ -1,0 +1,57 @@
+version: '2'
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - asciicheck
+    - bodyclose
+    - copyloopvar
+    - cyclop # - gocyclo
+    - errname
+    - errorlint
+    - goconst
+    - gocritic
+    - godot
+    - gosec
+    - misspell
+    - mnd
+    - nilnil
+    - noctx
+    - prealloc
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - wsl_v5
+  settings:
+    cyclop:
+      max-complexity: 25
+    gosec:
+      excludes:
+        - G101
+    revive:
+      rules:
+        - name: var-naming
+          disabled: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

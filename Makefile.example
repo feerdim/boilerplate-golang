@@ -1,0 +1,49 @@
+# App Env
+GO_APP=go
+RUNNER_APP=nodemon
+MIGRATE_APP=migrate
+LINT_APP=golangci-lint
+RUNNER_SIG_EXT=go,tmpl,html
+
+SERVER_FILE=cmd/server/main.go
+SEEDER_FILE=cmd/seeder/main.go
+MIGRATE_FILE=cmd/migrate/main.go
+BINARY_FILE=bin/server/main.sh
+
+MIGRATE_FOLDER=./database/migration
+MIGRATE_DB_CONN=postgresql://<username>:<password>@127.0.0.1:5432/<schema>?sslmode=disable
+
+env:
+	cp example.env .env
+deps:
+	$(GO_APP) mod tidy
+run:
+	$(GO_APP) run $(SERVER_FILE)
+dev:
+	$(RUNNER_APP) --exec $(GO_APP) run $(SERVER_FILE) --signal SIGTERM -e $(RUNNER_SIG_EXT)
+build:
+	$(GO_APP) build -o $(BINARY_FILE) $(SERVER_FILE)
+seed:
+	$(GO_APP) run $(SEEDER_FILE) --gseed
+migrate:
+	$(GO_APP) run $(MIGRATE_FILE)
+
+lint:
+	@echo -e "==> start linting..."
+	$(LINT_APP) run --fix
+
+migrate.create:
+	$(MIGRATE_APP) create -ext sql -dir $(MIGRATE_FOLDER) $(name)
+migrate.up:
+	$(MIGRATE_APP) -path $(MIGRATE_FOLDER) -database $(MIGRATE_DB_CONN) --verbose up
+migrate.down:
+	$(MIGRATE_APP) -path $(MIGRATE_FOLDER) -database $(MIGRATE_DB_CONN) --verbose down
+migrate.fix:
+	$(MIGRATE_APP) -path $(MIGRATE_FOLDER) -database $(MIGRATE_DB_CONN) force $(version)
+migrate.seed:
+	$(GO_APP) run $(SEEDER_FILE) --gseed
+
+migrate.models:
+	cd ./database/sqlc && sqlc generate
+	find ./database/sqlc -name "db.go" -type f -delete
+	find ./database/sqlc -name "query.sql.go" -type f -delete
