@@ -15,7 +15,7 @@ tmp/
 test_coverage.html
 
 # Env variables
-# credentials/
+credentials/
 vendor/
 .env
 Makefile
