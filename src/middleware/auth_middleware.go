@@ -9,7 +9,7 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/constant"
 	"github.com/feerdim/boilerplate-golang/src/session/auth"
 	"github.com/feerdim/boilerplate-golang/src/session/jwt"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 	"gorm.io/gorm"
 )
 
@@ -26,7 +26,7 @@ func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
 }
 
 func (am *AuthMiddleware) ValidateToken(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		token, err := parseHeaderToken(c.Request().Header)
 		if err != nil {
 			log.PrintError(err, "error parse header token")

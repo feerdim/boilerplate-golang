@@ -24,11 +24,7 @@ func (s *Service) SendForgotPasswordLinkService(
 		return
 	}
 
-	token, err := util.GenerateRandomString(constant.DefaultTokenLength)
-	if err != nil {
-		log.WithContext(ctx).Error(err, "error generate random string")
-		return
-	}
+	token := util.GenerateRandomString(constant.DefaultTokenLength)
 
 	expiresDuration, err := time.ParseDuration(constant.DefaultForgotPasswordExpires)
 	if err != nil {

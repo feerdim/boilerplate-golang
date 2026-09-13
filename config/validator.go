@@ -10,7 +10,7 @@ func NewValidator() *Validator {
 	return &Validator{Validator: validator.New()}
 }
 
-func (v Validator) Validate(i interface{}) (err error) {
+func (v Validator) Validate(i any) (err error) {
 	err = v.Validator.Struct(i)
 
 	return

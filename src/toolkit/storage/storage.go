@@ -22,6 +22,11 @@ type Storage struct {
 }
 
 func NewStorage(ctx context.Context) (stg *Storage, err error) {
+	googleApplicationCredentials := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+	if googleApplicationCredentials == "" {
+		return
+	}
+
 	stg = &Storage{}
 
 	stg.Timeout, err = time.ParseDuration(os.Getenv("GOOGLE_CLOUD_STORAGE_TIMEOUT"))

@@ -1,27 +1,27 @@
 CREATE TABLE IF NOT EXISTS roles (
-    guid varchar NOT NULL PRIMARY KEY,
+    guid UUID NOT NULL PRIMARY KEY,
     name varchar NOT NULL,
     description varchar,
     created_at timestamp without time zone NOT NULL DEFAULT (now() at time zone 'UTC')::TIMESTAMP,
-    created_by varchar,
+    created_by UUID,
     updated_at timestamp without time zone,
-    updated_by varchar
+    updated_by UUID
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    guid varchar NOT NULL PRIMARY KEY,
+    guid UUID NOT NULL PRIMARY KEY,
     name varchar NOT NULL,
     email varchar NOT NULL UNIQUE,
     password varchar NOT NULL,
     verified_at timestamp without time zone,
     activated_at timestamp without time zone,
-    activated_by varchar,
+    activated_by UUID,
     created_at timestamp without time zone NOT NULL DEFAULT (now() at time zone 'UTC')::TIMESTAMP,
-    created_by varchar,
+    created_by UUID,
     updated_at timestamp without time zone,
-    updated_by varchar,
+    updated_by UUID,
     deleted_at timestamp without time zone,
-    deleted_by varchar
+    deleted_by UUID
 );
 
 ALTER TABLE roles
@@ -43,8 +43,8 @@ VALUES
 ('01928589-56f2-7065-ac68-f63261a05b4f', 'Admin', 'admin@gmail.com', '$2a$10$FE8avrLD/pyO.bDtYs82u.aYLaYtNx7zrpWVeXZNa.zHFeD3QLfzW', (now() at time zone 'UTC')::TIMESTAMP, (now() at time zone 'UTC')::TIMESTAMP, (now() at time zone 'UTC')::TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS role_user (
-    role_guid varchar NOT NULL REFERENCES roles(guid) ON UPDATE CASCADE ON DELETE CASCADE,
-    user_guid varchar NOT NULL REFERENCES users(guid) ON UPDATE CASCADE ON DELETE CASCADE
+    role_guid UUID NOT NULL REFERENCES roles(guid) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_guid UUID NOT NULL REFERENCES users(guid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 INSERT INTO role_user (role_guid, user_guid)
@@ -52,13 +52,13 @@ VALUES
 ('019288cc-3c8c-7484-ac0d-3362a88ae018', '01928589-56f2-7065-ac68-f63261a05b4f');
 
 CREATE TABLE IF NOT EXISTS permission_groups (
-    guid varchar NOT NULL PRIMARY KEY,
+    guid UUID NOT NULL PRIMARY KEY,
     name varchar NOT NULL,
     description varchar,
     created_at timestamp without time zone NOT NULL DEFAULT (now() at time zone 'UTC')::TIMESTAMP,
-    created_by varchar REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL,
+    created_by UUID REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL,
     updated_at timestamp without time zone,
-    updated_by varchar REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL
+    updated_by UUID REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 INSERT INTO permission_groups (guid, name, created_at)
@@ -66,14 +66,14 @@ VALUES
 ('0195aa10-caee-7e5f-b118-b762943c8c48', 'Account Management', (now() at time zone 'UTC')::TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS permissions (
-    guid varchar NOT NULL PRIMARY KEY,
-    permission_group_guid varchar NOT NULL REFERENCES permission_groups(guid) ON UPDATE CASCADE ON DELETE CASCADE,
+    guid UUID NOT NULL PRIMARY KEY,
+    permission_group_guid UUID NOT NULL REFERENCES permission_groups(guid) ON UPDATE CASCADE ON DELETE CASCADE,
     name varchar NOT NULL,
     description varchar,
     created_at timestamp without time zone NOT NULL DEFAULT (now() at time zone 'UTC')::TIMESTAMP,
-    created_by varchar REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL,
+    created_by UUID REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL,
     updated_at timestamp without time zone,
-    updated_by varchar REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL
+    updated_by UUID REFERENCES users(guid) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 INSERT INTO permissions (guid, permission_group_guid, name, created_at)
@@ -84,8 +84,8 @@ VALUES
 ('0195aa11-8cc9-728c-87a3-6f056641373c', '0195aa10-caee-7e5f-b118-b762943c8c48', 'View', (now() at time zone 'UTC')::TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS permission_role (
-    permission_guid varchar NOT NULL REFERENCES permissions(guid) ON UPDATE CASCADE ON DELETE CASCADE,
-    role_guid varchar NOT NULL REFERENCES roles(guid) ON UPDATE CASCADE ON DELETE CASCADE
+    permission_guid UUID NOT NULL REFERENCES permissions(guid) ON UPDATE CASCADE ON DELETE CASCADE,
+    role_guid UUID NOT NULL REFERENCES roles(guid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 INSERT INTO permission_role (permission_guid, role_guid)
@@ -96,7 +96,7 @@ VALUES
 ('0195aa11-8cc9-728c-87a3-6f056641373c', '019288cc-3c8c-7484-ac0d-3362a88ae018');
 
 CREATE TABLE IF NOT EXISTS user_token_validations (
-    guid varchar NOT NULL PRIMARY KEY,
+    guid UUID NOT NULL PRIMARY KEY,
     email varchar NOT NULL,
     type varchar NOT NULL,
     token varchar NOT NULL,
@@ -106,8 +106,8 @@ CREATE TABLE IF NOT EXISTS user_token_validations (
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
-    guid varchar NOT NULL PRIMARY KEY,
-    user_guid varchar NOT NULL REFERENCES users(guid) ON UPDATE CASCADE ON DELETE CASCADE,
+    guid UUID NOT NULL PRIMARY KEY,
+    user_guid UUID NOT NULL REFERENCES users(guid) ON UPDATE CASCADE ON DELETE CASCADE,
     access_token varchar NOT NULL,
     access_token_expires_at timestamp without time zone NOT NULL,
     refresh_token varchar NOT NULL,

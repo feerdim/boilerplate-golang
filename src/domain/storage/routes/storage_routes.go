@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/feerdim/boilerplate-golang/src/toolkit"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 
 	directoryApp "github.com/feerdim/boilerplate-golang/src/domain/storage/feature/directory/application"
 	fileApp "github.com/feerdim/boilerplate-golang/src/domain/storage/feature/file/application"

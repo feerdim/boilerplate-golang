@@ -9,9 +9,10 @@ import (
 )
 
 func DeleteFileHelper(
-	ctx context.Context,
 	path string,
 ) {
+	ctx := context.Background()
+
 	stg, err := storage.NewStorage(ctx)
 	if err != nil {
 		log.WithContext(ctx).Error(err, "error init google cloud storage")

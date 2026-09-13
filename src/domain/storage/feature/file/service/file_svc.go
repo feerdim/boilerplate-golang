@@ -139,7 +139,7 @@ func (s *Service) UpdateFileService(
 	})
 
 	if request.File != nil {
-		go helper.DeleteFileHelper(context.Background(), oldPath)
+		go helper.DeleteFileHelper(oldPath)
 	}
 
 	return
@@ -161,7 +161,7 @@ func (s *Service) DeleteFileService(
 		return
 	}
 
-	go helper.DeleteFileHelper(context.Background(), file.Path)
+	go helper.DeleteFileHelper(file.Path)
 
 	return
 }

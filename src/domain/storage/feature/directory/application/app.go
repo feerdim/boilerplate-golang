@@ -4,7 +4,7 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/domain/storage/feature/directory/service"
 	"github.com/feerdim/boilerplate-golang/src/middleware"
 	"github.com/feerdim/boilerplate-golang/src/toolkit"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func AddRoutes(g *echo.Group, t *toolkit.Toolkit) {

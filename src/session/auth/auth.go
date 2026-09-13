@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/feerdim/boilerplate-golang/src/session/jwt"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +17,7 @@ func NewAuth(db *gorm.DB) *Auth {
 	}
 }
 
-func GetAuth(c echo.Context) *Auth {
+func GetAuth(c *echo.Context) *Auth {
 	a, _ := c.Get("auth").(Auth)
 
 	return &a

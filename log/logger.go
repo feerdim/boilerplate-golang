@@ -32,7 +32,7 @@ func WithContext(ctx context.Context) *Logger {
 	return &l
 }
 
-func (l *Logger) Debug(msg string, fields ...interface{}) {
+func (l *Logger) Debug(msg string, fields ...any) {
 	msg = generateMessage(msg, fields)
 
 	if l.level <= debugLevel {
@@ -44,7 +44,7 @@ func (l *Logger) Debug(msg string, fields ...interface{}) {
 	}
 }
 
-func (l *Logger) Info(msg string, fields ...interface{}) {
+func (l *Logger) Info(msg string, fields ...any) {
 	msg = generateMessage(msg, fields)
 
 	if l.level <= infoLevel {
@@ -56,7 +56,7 @@ func (l *Logger) Info(msg string, fields ...interface{}) {
 	}
 }
 
-func (l *Logger) Warn(msg string, fields ...interface{}) {
+func (l *Logger) Warn(msg string, fields ...any) {
 	msg = generateMessage(msg, fields)
 
 	if l.level <= warnLevel {
@@ -68,7 +68,7 @@ func (l *Logger) Warn(msg string, fields ...interface{}) {
 	}
 }
 
-func (l *Logger) Error(err error, msg string, fields ...interface{}) {
+func (l *Logger) Error(err error, msg string, fields ...any) {
 	msg = generateMessage(msg, fields)
 
 	if l.level <= errorLevel {
@@ -81,7 +81,7 @@ func (l *Logger) Error(err error, msg string, fields ...interface{}) {
 	}
 }
 
-func (l *Logger) NewError(err, newErr error, fields ...interface{}) error {
+func (l *Logger) NewError(err, newErr error, fields ...any) error {
 	msg := generateMessage(newErr.Error(), fields)
 
 	if l.level <= errorLevel {
@@ -96,7 +96,7 @@ func (l *Logger) NewError(err, newErr error, fields ...interface{}) error {
 	return newErr
 }
 
-func (l *Logger) Fatal(err error, msg string, fields ...interface{}) {
+func (l *Logger) Fatal(err error, msg string, fields ...any) {
 	msg = generateMessage(msg, fields)
 
 	if l.level <= fatalLevel {

@@ -8,7 +8,7 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/constant"
 	"github.com/getsentry/sentry-go"
 	sentryEcho "github.com/getsentry/sentry-go/echo"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func SentryMiddleware(e *echo.Echo) {

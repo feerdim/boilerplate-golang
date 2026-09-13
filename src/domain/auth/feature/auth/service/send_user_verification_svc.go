@@ -22,10 +22,7 @@ func (s *Service) SendUserVerificationService(
 		return
 	}
 
-	token, err := util.GenerateRandomString(constant.DefaultTokenLength)
-	if err != nil {
-		return
-	}
+	token := util.GenerateRandomString(constant.DefaultTokenLength)
 
 	userTokenValidation := model.UserTokenValidation{
 		GUID:      util.GenerateUUID(),

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/feerdim/boilerplate-golang/src/constant"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 )
 
 func TimeoutMiddleware(e *echo.Echo) {
@@ -15,7 +15,7 @@ func TimeoutMiddleware(e *echo.Echo) {
 		timeout = constant.DefaultMdwTimeout
 	}
 
-	e.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
+	e.Use(middleware.ContextTimeoutWithConfig(middleware.ContextTimeoutConfig{
 		Timeout: timeout,
 		Skipper: middleware.DefaultSkipper,
 	}))

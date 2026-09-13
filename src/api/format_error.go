@@ -28,7 +28,7 @@ func formatError(err error) (e map[string]string) {
 	return
 }
 
-func formatErrorValidate(err error) (message map[string]interface{}) {
+func formatErrorValidate(err error) (message map[string]any) {
 	var ve validator.ValidationErrors
 
 	ok := errors.As(err, &ve)
@@ -36,7 +36,7 @@ func formatErrorValidate(err error) (message map[string]interface{}) {
 		return
 	}
 
-	message = make(map[string]interface{})
+	message = make(map[string]any)
 
 	for _, e := range ve {
 		switch e.Tag() {

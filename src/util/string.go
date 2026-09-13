@@ -2,24 +2,22 @@ package util
 
 import (
 	"crypto/rand"
-	"math/big"
 	"strings"
 )
 
-func GenerateRandomString(n int) (string, error) {
-	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+func GenerateRandomString(n int) string {
+	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
+	ll := len(chars)
 	b := make([]byte, n)
-	for i := range b {
-		r, err := rand.Int(rand.Reader, big.NewInt(int64(len(letterBytes))))
-		if err != nil {
-			return "", err
-		}
 
-		b[i] = letterBytes[r.Int64()]
+	rand.Read(b)
+
+	for i := range b {
+		b[i] = chars[int(b[i])%ll]
 	}
 
-	return string(b), nil
+	return string(b)
 }
 
 func FormatPhoneNumber(phoneNumber string) string {

@@ -17,10 +17,12 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/toolkit/storage"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func main() {
+	const readHeaderTimeout = 10 * time.Second
+
 	var err error
 
 	if os.Getenv("APP_ENV") == "" {
@@ -58,7 +60,7 @@ func main() {
 
 	stg, err := storage.NewStorage(ctx)
 	if err != nil {
-		log.Printf("ERROR mail dialer : %s", err.Error())
+		log.Printf("ERROR storage : %s", err.Error())
 		return
 	}
 
@@ -67,28 +69,39 @@ func main() {
 	r := config.NewRuntime()
 
 	e := echo.New()
-	e.HideBanner = true
 	e.Validator = config.NewValidator()
 	e.HTTPErrorHandler = domain.ErrorHandler()
 
-	go shutdown(ctx, r, e, dbx)
+	s := &http.Server{
+		Addr:              fmt.Sprintf("%s:%d", r.Host, r.Port),
+		Handler:           e,
+		ReadHeaderTimeout: readHeaderTimeout,
+	}
 
 	domain.Routes(e, t)
 
-	if err := e.Start(fmt.Sprintf("%s:%d", r.Host, r.Port)); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Printf("ERROR starting http server : %s", err.Error())
-	}
+	go func() {
+		log.Printf("Starting http server %s:%d\n--------------------------------", r.Host, r.Port)
+
+		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Printf("ERROR starting http server : %s", err.Error())
+		}
+	}()
+
+	gracefulShutdown(ctx, r, s, dbx)
 }
 
-func shutdown(ctx context.Context, r *config.Runtime, e *echo.Echo, dbx *sqlx.DB) {
+func gracefulShutdown(ctx context.Context, r *config.Runtime, s *http.Server, dbx *sqlx.DB) {
 	<-ctx.Done()
+
+	log.Printf("Graceful shutdown starting ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), r.ShutdownTimeoutDuration)
 	defer cancel()
 
 	<-time.After(r.ShutdownWaitDuration)
 
-	if err := e.Shutdown(ctx); err != nil {
+	if err := s.Shutdown(ctx); err != nil {
 		log.Printf("ERROR shutdown server : %s", err.Error())
 		return
 	}
@@ -97,4 +110,6 @@ func shutdown(ctx context.Context, r *config.Runtime, e *echo.Echo, dbx *sqlx.DB
 		log.Printf("ERROR close database connection : %s", err.Error())
 		return
 	}
+
+	log.Printf("Graceful shutdown success")
 }

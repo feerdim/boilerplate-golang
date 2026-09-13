@@ -9,11 +9,11 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/domain/auth/feature/iam/payload"
 	"github.com/feerdim/boilerplate-golang/src/domain/auth/feature/iam/service"
 	"github.com/feerdim/boilerplate-golang/src/session/auth"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func readPermissionListApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request payload.ReadPermissionListRequest
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -41,7 +41,7 @@ func readPermissionListApp(s *service.Service) echo.HandlerFunc {
 }
 
 func readPermissionDetailApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request api.GUIDPayload
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -67,7 +67,7 @@ func readPermissionDetailApp(s *service.Service) echo.HandlerFunc {
 }
 
 func createPermissionApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request payload.PermissionRequest
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -93,7 +93,7 @@ func createPermissionApp(s *service.Service) echo.HandlerFunc {
 }
 
 func updatePermissionApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request payload.UpdatePermissionRequest
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -119,7 +119,7 @@ func updatePermissionApp(s *service.Service) echo.HandlerFunc {
 }
 
 func deletePermissionApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request api.GUIDPayload
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)

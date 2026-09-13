@@ -29,7 +29,6 @@ migrate:
 	$(GO_APP) run $(MIGRATE_FILE)
 
 lint:
-	@echo -e "==> start linting..."
 	$(LINT_APP) run --fix
 
 migrate.create:

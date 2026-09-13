@@ -5,7 +5,7 @@ import (
 	"html/template"
 )
 
-func ParseTemplateHTML(pathFile string, data interface{}) (string, error) {
+func ParseTemplateHTML(pathFile string, data any) (string, error) {
 	template, err := template.ParseFiles(pathFile)
 	if err != nil {
 		return "", err

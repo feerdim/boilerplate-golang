@@ -6,11 +6,11 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/api"
 	"github.com/feerdim/boilerplate-golang/src/domain/auth/feature/auth/service"
 	"github.com/feerdim/boilerplate-golang/src/session/auth"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func logoutApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		err = s.LogoutService(c.Request().Context(), auth.GetAuth(c).GetClaims())
 		if err != nil {
 			return api.ResponseError(c, err, msgFailedLogout)

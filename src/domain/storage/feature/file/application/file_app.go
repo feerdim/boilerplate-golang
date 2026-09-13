@@ -14,11 +14,11 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/session/auth"
 	"github.com/feerdim/boilerplate-golang/src/toolkit/storage"
 	"github.com/feerdim/boilerplate-golang/src/util"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func readFileListApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request payload.ReadFileListRequest
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -46,7 +46,7 @@ func readFileListApp(s *service.Service) echo.HandlerFunc {
 }
 
 func readFileDetailApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request api.GUIDPayload
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -72,7 +72,7 @@ func readFileDetailApp(s *service.Service) echo.HandlerFunc {
 }
 
 func createFileApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request payload.FileRequest
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -104,7 +104,7 @@ func createFileApp(s *service.Service) echo.HandlerFunc {
 }
 
 func updateFileApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request payload.UpdateFileRequest
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -136,7 +136,7 @@ func updateFileApp(s *service.Service) echo.HandlerFunc {
 }
 
 func deleteFileApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var request api.GUIDPayload
 		if err = c.Bind(&request); err != nil {
 			err = log.PrintNewError(err, constant.ErrFailedParseRequest)
@@ -162,7 +162,7 @@ func deleteFileApp(s *service.Service) echo.HandlerFunc {
 }
 
 func openFileApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var (
 			request payload.OpenFileRequest
 			ctx     = c.Request().Context()

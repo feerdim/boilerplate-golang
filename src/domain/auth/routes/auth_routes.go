@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/feerdim/boilerplate-golang/src/toolkit"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 
 	authApp "github.com/feerdim/boilerplate-golang/src/domain/auth/feature/auth/application"
 	iamApp "github.com/feerdim/boilerplate-golang/src/domain/auth/feature/iam/application"

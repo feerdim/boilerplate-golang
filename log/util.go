@@ -23,7 +23,7 @@ func parseInt(i int, s string) int {
 	return o
 }
 
-func ParseJSON(data interface{}) string {
+func ParseJSON(data any) string {
 	JSON, err := json.Marshal(data)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -32,7 +32,7 @@ func ParseJSON(data interface{}) string {
 	return string(JSON)
 }
 
-func ParsePrettyJSON(data interface{}) string {
+func ParsePrettyJSON(data any) string {
 	JSON, err := json.MarshalIndent(data, "", "    ")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -41,7 +41,7 @@ func ParsePrettyJSON(data interface{}) string {
 	return string(JSON)
 }
 
-func generateMessage(msg string, fields []interface{}) string {
+func generateMessage(msg string, fields []any) string {
 	if len(fields) == 0 {
 		return msg
 	}

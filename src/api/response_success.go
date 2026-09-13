@@ -3,17 +3,17 @@ package api
 import (
 	"math"
 
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type responseDataPayload struct {
-	Data      interface{} `json:"data"`
-	Message   string      `json:"message"`
-	TotalData *int64      `json:"total_data,omitempty"`
+	Data      any    `json:"data"`
+	Message   string `json:"message"`
+	TotalData *int64 `json:"total_data,omitempty"`
 }
 
 type responsePaginatePayload struct {
-	Data     interface{}     `json:"data"`
+	Data     any             `json:"data"`
 	Message  string          `json:"message"`
 	Paginate paginatePayload `json:"paginate"`
 }
@@ -25,14 +25,14 @@ type paginatePayload struct {
 	TotalData   int64   `json:"total_data"`
 }
 
-func ResponseData(c echo.Context, res ResponsePayload) error {
+func ResponseData(c *echo.Context, res ResponsePayload) error {
 	return c.JSON(res.Code, responseDataPayload{
 		Data:    res.Data,
 		Message: res.Message,
 	})
 }
 
-func ResponsePaginate(c echo.Context, paginate PaginationPayload, totalData int64, res ResponsePayload) error {
+func ResponsePaginate(c *echo.Context, paginate PaginationPayload, totalData int64, res ResponsePayload) error {
 	if paginate.Page <= 0 && paginate.Limit <= 0 {
 		return c.JSON(res.Code, responseDataPayload{
 			Data:      res.Data,

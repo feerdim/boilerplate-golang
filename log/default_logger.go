@@ -26,10 +26,10 @@ func SetDefaultLogger() {
 	cw := zerolog.ConsoleWriter{
 		Out:        os.Stdout,
 		TimeFormat: time.RFC3339,
-		FormatMessage: func(i interface{}) string {
+		FormatMessage: func(i any) string {
 			return fmt.Sprintf("\n%s", i)
 		},
-		FormatCaller: func(i interface{}) string {
+		FormatCaller: func(i any) string {
 			dir, file := filepath.Split(fmt.Sprintf("%s", i))
 			list := strings.Split(dir, "/")
 

@@ -22,7 +22,7 @@ func GenerateJWT(claims jwt.Claims, secretKey string) (token string, err error) 
 
 func ClaimsJWT(token, secretKey string) (claims jwt.MapClaims, err error) {
 	_, err = jwt.ParseWithClaims(token, &claims,
-		func(token *jwt.Token) (interface{}, error) {
+		func(token *jwt.Token) (any, error) {
 			if jwt.GetSigningMethod("HS256") != token.Method {
 				return nil, errors.Wrapf(err, "Unexpected signing method: %v", token.Header["alg"])
 			}

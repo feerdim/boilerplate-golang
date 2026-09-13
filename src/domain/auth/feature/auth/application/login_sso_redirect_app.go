@@ -9,11 +9,11 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/constant"
 	"github.com/feerdim/boilerplate-golang/src/domain/auth/feature/auth/payload"
 	"github.com/feerdim/boilerplate-golang/src/domain/auth/feature/auth/service"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func loginSSORedirectApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		var (
 			request payload.LoginSSORedirectRequest
 			baseURL = os.Getenv("FRONTEND_URL")

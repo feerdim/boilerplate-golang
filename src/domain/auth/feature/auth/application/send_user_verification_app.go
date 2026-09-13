@@ -7,11 +7,11 @@ import (
 	"github.com/feerdim/boilerplate-golang/src/api"
 	"github.com/feerdim/boilerplate-golang/src/domain/auth/feature/auth/service"
 	"github.com/feerdim/boilerplate-golang/src/session/auth"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func sendUserVerificationApp(s *service.Service) echo.HandlerFunc {
-	return func(c echo.Context) (err error) {
+	return func(c *echo.Context) (err error) {
 		ctx := c.Request().Context()
 
 		user, err := auth.GetAuth(c).GetUser()
