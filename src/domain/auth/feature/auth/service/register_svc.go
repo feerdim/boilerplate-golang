@@ -20,7 +20,7 @@ func (s *Service) RegisterService(
 ) (session model.Session, user *model.User, err error) {
 	password, err := util.GenerateHashPassword(request.Password)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error generate hash password : "+request.Password)
+		log.Ctx(ctx).Error(err, "error generate hash password : "+request.Password)
 		return
 	}
 
@@ -41,14 +41,14 @@ func (s *Service) RegisterService(
 
 	err = util.Transaction(ctx, s.db, func(db *gorm.DB) (err error) {
 		if err = db.Create(&user).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error create user", "user model", user)
+			log.Ctx(ctx).Error(err, "error create user", "user model", user)
 			err = util.ValidateUnique(err, constant.ErrEmailAlreadyExists)
 
 			return
 		}
 
 		if err = db.Create(&session).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error create session", "session model", session)
+			log.Ctx(ctx).Error(err, "error create session", "session model", session)
 			return
 		}
 

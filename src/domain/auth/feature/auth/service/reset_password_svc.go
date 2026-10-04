@@ -20,19 +20,19 @@ func (s *Service) ResetPasswordService(
 
 	password, err := util.GenerateHashPassword(request.Password)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error generate hash password : "+request.Password)
+		log.Ctx(ctx).Error(err, "error generate hash password : "+request.Password)
 		return
 	}
 
 	var user model.User
 
 	if err = s.db.Model(&user).Where("email = ?", request.Email).Updates(model.User{Password: password}).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error update user by email : "+request.Email)
+		log.Ctx(ctx).Error(err, "error update user by email : "+request.Email)
 		return
 	}
 
 	if err = s.db.Delete(&userTokenValidation).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete user validation token", "user validation token model", userTokenValidation)
+		log.Ctx(ctx).Error(err, "error delete user validation token", "user validation token model", userTokenValidation)
 		return
 	}
 

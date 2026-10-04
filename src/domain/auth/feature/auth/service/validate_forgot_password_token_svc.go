@@ -15,7 +15,7 @@ func (s *Service) ValidateForgotPasswordTokenService(
 	request payload.ValidateForgotPasswordTokenRequest,
 ) (userTokenValidation model.UserTokenValidation, err error) {
 	if err = s.db.Where("type = ? AND email = ?", model.UserTokenValidationTypeForgotPassword, request.Email).First(&userTokenValidation).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find user forgot password token by email : "+request.Email)
+		log.Ctx(ctx).Error(err, "error find user forgot password token by email : "+request.Email)
 		return
 	}
 

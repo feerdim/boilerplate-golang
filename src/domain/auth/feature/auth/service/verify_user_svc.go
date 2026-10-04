@@ -20,7 +20,7 @@ func (s *Service) VerifyUserService(
 	var userTokenValidation model.UserTokenValidation
 
 	if err = s.db.Where("type = ? AND email = ?", model.UserTokenValidationTypeVerification, request.Email).First(&userTokenValidation).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find user verification token by email : "+request.Email)
+		log.Ctx(ctx).Error(err, "error find user verification token by email : "+request.Email)
 		return
 	}
 
@@ -38,12 +38,12 @@ func (s *Service) VerifyUserService(
 		var user model.User
 
 		if err = db.Model(&user).Where("email = ?", request.Email).Updates(model.User{VerifiedAt: sql.NullTime{Time: time.Now(), Valid: true}}).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error update user by id : "+user.GUID)
+			log.Ctx(ctx).Error(err, "error update user by id : "+user.GUID)
 			return
 		}
 
 		if err = db.Delete(&userTokenValidation).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error delete user verification token by email : "+request.Email)
+			log.Ctx(ctx).Error(err, "error delete user verification token by email : "+request.Email)
 			return
 		}
 

@@ -16,7 +16,7 @@ func (s *Service) LoginService(
 	request payload.LoginRequest,
 ) (session model.Session, user *model.User, err error) {
 	if err = s.db.Where("email = ?", request.Email).First(&user).Error; err != nil {
-		err = log.WithContext(ctx).NewError(err, constant.ErrAccountNotFound)
+		err = log.Ctx(ctx).NewError(err, constant.ErrAccountNotFound)
 		return
 	}
 
@@ -34,7 +34,7 @@ func (s *Service) LoginService(
 	}
 
 	if err = s.db.Create(&session).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error create session", "session model", session)
+		log.Ctx(ctx).Error(err, "error create session", "session model", session)
 		return
 	}
 

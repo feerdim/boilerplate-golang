@@ -36,7 +36,7 @@ func registerApp(s *service.Service) echo.HandlerFunc {
 			ctx := context.Background()
 
 			if err := s.SendUserVerificationService(ctx, request.Name, request.Email); err != nil {
-				log.WithContext(ctx).Error(err, msgFailedSendUserVerification)
+				log.Ctx(ctx).Error(err, msgFailedSendUserVerification)
 			}
 		}()
 

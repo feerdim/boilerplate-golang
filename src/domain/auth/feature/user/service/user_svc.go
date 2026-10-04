@@ -28,7 +28,7 @@ func (s *Service) ReadUserListService(
 	statement = statement.Order(request.Order)
 
 	if err = statement.Count(&totalData).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error count user", "request", request)
+		log.Ctx(ctx).Error(err, "error count user", "request", request)
 		return
 	}
 
@@ -37,7 +37,7 @@ func (s *Service) ReadUserListService(
 	}
 
 	if err = statement.Find(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find user", "request", request)
+		log.Ctx(ctx).Error(err, "error find user", "request", request)
 		return
 	}
 
@@ -51,7 +51,7 @@ func (s *Service) ReadUserDetailService(
 	data = model.User{GUID: request.GUID}
 
 	if err = s.db.Preload("Roles").First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find user by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find user by guid : "+request.GUID)
 		return
 	}
 
@@ -65,7 +65,7 @@ func (s *Service) CreateUserService(
 ) (err error) {
 	password, err := util.GenerateHashPassword(request.Password)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error generate hash password : "+request.Password)
+		log.Ctx(ctx).Error(err, "error generate hash password : "+request.Password)
 		return
 	}
 
@@ -78,7 +78,7 @@ func (s *Service) CreateUserService(
 	}
 
 	if err = s.db.Create(&user).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error create user", "user model", user)
+		log.Ctx(ctx).Error(err, "error create user", "user model", user)
 		return
 	}
 
@@ -95,7 +95,7 @@ func (s *Service) UpdateUserService(
 	if request.Password != "" {
 		password, err = util.GenerateHashPassword(request.Password)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error generate hash password : "+request.Password)
+			log.Ctx(ctx).Error(err, "error generate hash password : "+request.Password)
 			return
 		}
 	}
@@ -108,7 +108,7 @@ func (s *Service) UpdateUserService(
 	}
 
 	if err = s.db.Updates(&user).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error update user", "user model", user)
+		log.Ctx(ctx).Error(err, "error update user", "user model", user)
 		return
 	}
 
@@ -120,7 +120,7 @@ func (s *Service) DeleteUserService(
 	request api.GUIDPayload,
 ) (err error) {
 	if err = s.db.Delete(&model.User{GUID: request.GUID}).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete user by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error delete user by guid : "+request.GUID)
 		return
 	}
 

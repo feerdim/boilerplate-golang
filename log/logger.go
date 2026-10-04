@@ -2,6 +2,7 @@ package log
 
 import (
 	"context"
+	"path/filepath"
 	"runtime"
 
 	"github.com/getsentry/sentry-go"
@@ -9,25 +10,20 @@ import (
 )
 
 type Logger struct {
-	log         zerolog.Logger
-	level       int
-	isSentry    bool
-	sentry      *sentry.Event
-	sentryLevel int
+	log       zerolog.Logger
+	level     int
+	sentryHub *sentry.Hub
 }
 
-func WithContext(ctx context.Context) *Logger {
+func Ctx(ctx context.Context) *Logger {
 	l := Logger{
-		log:         defaultLogger.log,
-		level:       defaultLogger.level,
-		sentryLevel: defaultLogger.sentryLevel,
+		log:   defaultLogger.log,
+		level: defaultLogger.level,
 	}
 
 	if defaultLogger.isSentry {
-		l.sentry = sentry.NewEvent()
+		l.sentryHub = sentry.GetHubFromContext(ctx)
 	}
-
-	l.log.WithContext(ctx)
 
 	return &l
 }
@@ -37,10 +33,7 @@ func (l *Logger) Debug(msg string, fields ...any) {
 
 	if l.level <= debugLevel {
 		l.log.Debug().Msg(msg)
-	}
-
-	if l.sentry != nil && l.sentryLevel <= debugLevel {
-		go l.sendSentry(msg, debugLevel)
+		l.sendSentry(msg, debugLevel)
 	}
 }
 
@@ -49,10 +42,7 @@ func (l *Logger) Info(msg string, fields ...any) {
 
 	if l.level <= infoLevel {
 		l.log.Info().Msg(msg)
-	}
-
-	if l.sentry != nil && l.sentryLevel <= infoLevel {
-		go l.sendSentry(msg, infoLevel)
+		l.sendSentry(msg, infoLevel)
 	}
 }
 
@@ -61,10 +51,7 @@ func (l *Logger) Warn(msg string, fields ...any) {
 
 	if l.level <= warnLevel {
 		l.log.Warn().Msg(msg)
-	}
-
-	if l.sentry != nil && l.sentryLevel <= warnLevel {
-		go l.sendSentry(msg, warnLevel)
+		l.sendSentry(msg, warnLevel)
 	}
 }
 
@@ -73,9 +60,7 @@ func (l *Logger) Error(err error, msg string, fields ...any) {
 
 	if l.level <= errorLevel {
 		l.log.Error().Err(err).Msg(msg)
-	}
 
-	if l.sentry != nil && l.sentryLevel <= errorLevel {
 		pc, file, line, _ := runtime.Caller(1)
 		go l.sendExceptionSentry(err, msg, errorLevel, pc, file, line)
 	}
@@ -86,9 +71,7 @@ func (l *Logger) NewError(err, newErr error, fields ...any) error {
 
 	if l.level <= errorLevel {
 		l.log.Error().Err(err).Msg(msg)
-	}
 
-	if l.sentry != nil && l.sentryLevel <= errorLevel {
 		pc, file, line, _ := runtime.Caller(1)
 		go l.sendExceptionSentry(err, msg, errorLevel, pc, file, line)
 	}
@@ -101,10 +84,40 @@ func (l *Logger) Fatal(err error, msg string, fields ...any) {
 
 	if l.level <= fatalLevel {
 		l.log.Fatal().Err(err).Msg(msg)
-	}
 
-	if l.sentry != nil && l.sentryLevel <= fatalLevel {
 		pc, file, line, _ := runtime.Caller(1)
 		go l.sendExceptionSentry(err, msg, fatalLevel, pc, file, line)
 	}
+}
+
+func (l *Logger) sendSentry(msg string, level int) {
+	if l.sentryHub == nil {
+		return
+	}
+
+	l.sentryHub.AddBreadcrumb(&sentry.Breadcrumb{
+		Level:   parseLevelSentry(level),
+		Message: msg,
+	}, nil)
+}
+
+func (l *Logger) sendExceptionSentry(err error, msg string, level int, pc uintptr, file string, line int) {
+	if l.sentryHub == nil {
+		return
+	}
+
+	event := sentry.NewEvent()
+	event.Level = parseLevelSentry(level)
+	event.Message = msg
+
+	event.SetException(err, 1)
+
+	if len(event.Exception) > 0 && event.Exception[0].Stacktrace != nil && len(event.Exception[0].Stacktrace.Frames) > 0 {
+		event.Exception[0].Stacktrace.Frames[0].Function = runtime.FuncForPC(pc).Name()
+		event.Exception[0].Stacktrace.Frames[0].Filename = filepath.Base(file)
+		event.Exception[0].Stacktrace.Frames[0].AbsPath = file
+		event.Exception[0].Stacktrace.Frames[0].Lineno = line
+	}
+
+	_ = l.sentryHub.CaptureEvent(event)
 }

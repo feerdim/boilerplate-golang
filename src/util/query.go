@@ -22,7 +22,7 @@ func Transaction(
 	err = txFunc(db)
 	if err != nil {
 		if errRollback := tx.Rollback().Error; errRollback != nil {
-			log.WithContext(ctx).Error(errRollback, "error rollback")
+			log.Ctx(ctx).Error(errRollback, "error rollback")
 			return
 		}
 
@@ -30,7 +30,7 @@ func Transaction(
 	}
 
 	if err = tx.Commit().Error; err != nil {
-		log.WithContext(ctx).Error(err, "error commit")
+		log.Ctx(ctx).Error(err, "error commit")
 		return
 	}
 

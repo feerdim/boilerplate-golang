@@ -7,7 +7,7 @@ import (
 	"github.com/feerdim/boilerplate-golang/log"
 	"github.com/feerdim/boilerplate-golang/src/constant"
 	"github.com/getsentry/sentry-go"
-	sentryEcho "github.com/getsentry/sentry-go/echo"
+	sentryecho "github.com/getsentry/sentry-go/echo"
 	"github.com/labstack/echo/v5"
 )
 
@@ -29,7 +29,21 @@ func SentryMiddleware(e *echo.Echo) {
 			return
 		}
 
-		e.Use(sentryEcho.New(sentryEcho.Options{}))
+		e.Use(sentryecho.New(sentryecho.Options{
+			Repanic: true,
+		}))
+
+		e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+			return func(c *echo.Context) error {
+				if hub := sentryecho.GetHubFromContext(c); hub != nil {
+					ctx := sentry.SetHubOnContext(c.Request().Context(), hub)
+					c.SetRequest(c.Request().WithContext(ctx))
+				}
+
+				return next(c)
+			}
+		})
+
 		log.SetSentry()
 	}
 }

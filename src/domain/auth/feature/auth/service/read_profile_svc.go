@@ -14,7 +14,7 @@ func (s *Service) ReadProfileService(
 	data = model.User{GUID: userGUID}
 
 	if err = s.db.Preload("Roles.Permissions").First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find user by guid : "+userGUID)
+		log.Ctx(ctx).Error(err, "error find user by guid : "+userGUID)
 		return
 	}
 

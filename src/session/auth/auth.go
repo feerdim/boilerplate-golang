@@ -18,9 +18,9 @@ func NewAuth(db *gorm.DB) *Auth {
 }
 
 func GetAuth(c *echo.Context) *Auth {
-	a, _ := c.Get("auth").(Auth)
+	a, _ := c.Get("auth").(*Auth)
 
-	return &a
+	return a
 }
 
 func (a *Auth) GetClaims() *jwt.AccessTokenPayload {

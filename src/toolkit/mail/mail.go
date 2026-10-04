@@ -57,7 +57,7 @@ func (m Mail) SendMail(ctx context.Context, subject, body string, recipients ...
 		message.SetBody("text/html", body)
 
 		if err = m.Dialer.DialAndSend(message); err != nil {
-			log.WithContext(ctx).Error(err, "error send email with smtp driver")
+			log.PrintError(err, "error send email with smtp driver", "subject", subject, "recipients", recipients)
 			return
 		}
 
@@ -67,14 +67,14 @@ func (m Mail) SendMail(ctx context.Context, subject, body string, recipients ...
 
 		msg, id, err = m.Mailgun.Send(ctx, message)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error send email with mailgun driver")
+			log.PrintError(err, "error send email with mailgun driver", "subject", subject, "recipients", recipients)
 			return
 		}
 
 		log.PrintDebug("success send email with mailgun driver", "id", id, "resp", msg)
 	default:
 		err = constant.ErrUnknownSource
-		log.WithContext(ctx).Error(err, "error unknown mail driver")
+		log.PrintError(err, "error unknown mail driver")
 	}
 
 	return

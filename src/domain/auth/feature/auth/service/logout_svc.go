@@ -13,7 +13,7 @@ func (s *Service) LogoutService(
 	claims *jwt.AccessTokenPayload,
 ) (err error) {
 	if err = s.db.Delete(&model.Session{GUID: claims.GUID}).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete session by guid : "+claims.GUID)
+		log.Ctx(ctx).Error(err, "error delete session by guid : "+claims.GUID)
 		return
 	}
 

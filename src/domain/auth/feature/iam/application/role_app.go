@@ -21,7 +21,7 @@ func readRoleListApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation get role list request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation get role list request")
 			return api.ResponseErrorValidate(c, err)
 		}
 
@@ -49,7 +49,7 @@ func readRoleDetailApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation get role detail request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation get role detail request")
 			return api.ResponseErrorValidate(c, err)
 		}
 
@@ -101,7 +101,7 @@ func updateRoleApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation update role request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation update role request")
 			return api.ResponseErrorValidate(c, err)
 		}
 
@@ -127,7 +127,7 @@ func deleteRoleApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation delete role request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation delete role request")
 			return api.ResponseErrorValidate(c, err)
 		}
 

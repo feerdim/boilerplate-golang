@@ -16,7 +16,7 @@ func sendUserVerificationApp(s *service.Service) echo.HandlerFunc {
 
 		user, err := auth.GetAuth(c).GetUser()
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error find user")
+			log.Ctx(ctx).Error(err, "error find user")
 			return api.ResponseError(c, err, msgFailedSendUserVerification)
 		}
 
@@ -26,7 +26,7 @@ func sendUserVerificationApp(s *service.Service) echo.HandlerFunc {
 
 		err = s.SendUserVerificationService(ctx, user.Name, user.Email)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error send user verification")
+			log.Ctx(ctx).Error(err, "error send user verification")
 			return api.ResponseError(c, err, msgFailedSendUserVerification)
 		}
 

@@ -20,7 +20,7 @@ func (s *Service) UpdateProfileService(
 	if request.Password != "" {
 		password, err = util.GenerateHashPassword(request.Password)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error generate hash password : "+request.Password)
+			log.Ctx(ctx).Error(err, "error generate hash password : "+request.Password)
 			return
 		}
 	}
@@ -33,7 +33,7 @@ func (s *Service) UpdateProfileService(
 	}
 
 	if err = s.db.Updates(&user).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error update user", "user model", user)
+		log.Ctx(ctx).Error(err, "error update user", "user model", user)
 		return
 	}
 

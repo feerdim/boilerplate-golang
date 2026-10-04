@@ -30,7 +30,7 @@ func (s *Service) ReadFileListService(
 	statement = statement.Order(request.Order)
 
 	if err = statement.Count(&totalData).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error count file", "request", request)
+		log.Ctx(ctx).Error(err, "error count file", "request", request)
 		return
 	}
 
@@ -39,7 +39,7 @@ func (s *Service) ReadFileListService(
 	}
 
 	if err = statement.Find(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find file", "request", request)
+		log.Ctx(ctx).Error(err, "error find file", "request", request)
 		return
 	}
 
@@ -53,7 +53,7 @@ func (s *Service) ReadFileDetailService(
 	data = model.File{GUID: request.GUID}
 
 	if err = s.db.First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find file by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find file by guid : "+request.GUID)
 		return
 	}
 
@@ -67,7 +67,7 @@ func (s *Service) CreateFileService(
 ) (data model.File, err error) {
 	path, err := helper.UploadFileHelper(ctx, request)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error upload file")
+		log.Ctx(ctx).Error(err, "error upload file")
 		return
 	}
 
@@ -87,7 +87,7 @@ func (s *Service) CreateFileService(
 	}
 
 	if err = s.db.Create(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error create file", "file model", data)
+		log.Ctx(ctx).Error(err, "error create file", "file model", data)
 		return
 	}
 
@@ -104,7 +104,7 @@ func (s *Service) UpdateFileService(
 	data.GUID = request.GUID
 
 	if err = s.db.First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find file by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find file by guid : "+request.GUID)
 		return
 	}
 
@@ -125,13 +125,13 @@ func (s *Service) UpdateFileService(
 
 			data.Path, err = helper.UploadFileHelper(ctx, request.FileRequest)
 			if err != nil {
-				log.WithContext(ctx).Error(err, "error upload file")
+				log.Ctx(ctx).Error(err, "error upload file")
 				return
 			}
 		}
 
 		if err = db.Save(&data).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error update file", "file model", data)
+			log.Ctx(ctx).Error(err, "error update file", "file model", data)
 			return
 		}
 
@@ -152,12 +152,12 @@ func (s *Service) DeleteFileService(
 	file := model.File{GUID: request.GUID}
 
 	if err = s.db.First(&file).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find file by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find file by guid : "+request.GUID)
 		return
 	}
 
 	if err = s.db.Delete(&file).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete file by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error delete file by guid : "+request.GUID)
 		return
 	}
 
@@ -173,7 +173,7 @@ func (s *Service) OpenFileService(
 	data = model.File{}
 
 	if err = s.db.Model(&data).Where("path = ?", request.Path).First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find file by path : "+request.Path)
+		log.Ctx(ctx).Error(err, "error find file by path : "+request.Path)
 		return
 	}
 

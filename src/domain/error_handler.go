@@ -13,7 +13,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func ErrorHandler() echo.HTTPErrorHandler {
+func errorHandler() echo.HTTPErrorHandler {
 	return func(c *echo.Context, err error) {
 		if echoError, ok := errors.AsType[*echo.HTTPError](err); ok {
 			_ = c.JSON(echoError.Code, echoError)

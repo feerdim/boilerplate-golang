@@ -28,7 +28,7 @@ func (s *Service) ReadPermissionListService(
 	statement = statement.Order(request.Order)
 
 	if err = statement.Find(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find permission", "request", request)
+		log.Ctx(ctx).Error(err, "error find permission", "request", request)
 		return
 	}
 
@@ -42,7 +42,7 @@ func (s *Service) ReadPermissionDetailService(
 	data = model.Permission{GUID: request.GUID}
 
 	if err = s.db.Preload("PermissionGroup").First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find permission by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find permission by guid : "+request.GUID)
 		return
 	}
 
@@ -66,7 +66,7 @@ func (s *Service) CreatePermissionService(
 	}
 
 	if err = s.db.Create(&permission).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error create permission", "permission model", permission)
+		log.Ctx(ctx).Error(err, "error create permission", "permission model", permission)
 		return
 	}
 
@@ -89,7 +89,7 @@ func (s *Service) UpdatePermissionService(
 	}
 
 	if err = s.db.Updates(&permission).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error update permission", "permission model", permission)
+		log.Ctx(ctx).Error(err, "error update permission", "permission model", permission)
 		return
 	}
 
@@ -101,7 +101,7 @@ func (s *Service) DeletePermissionService(
 	request api.GUIDPayload,
 ) (err error) {
 	if err = s.db.Delete(&model.Permission{GUID: request.GUID}).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete permission by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error delete permission by guid : "+request.GUID)
 		return
 	}
 

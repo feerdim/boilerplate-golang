@@ -16,14 +16,14 @@ func UploadFileHelper(
 ) (filePath string, err error) {
 	stg, err := storage.NewStorage(ctx)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error init google cloud storage")
+		log.Ctx(ctx).Error(err, "error init google cloud storage")
 		return
 	}
 	defer util.CloseBuffer(stg.Client)
 
 	filePath, err = stg.UploadFile(ctx, request.File, request.Path, time.Now().Unix())
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error upload file to google cloud storage")
+		log.Ctx(ctx).Error(err, "error upload file to google cloud storage")
 		return
 	}
 

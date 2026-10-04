@@ -21,7 +21,13 @@ import (
 )
 
 func main() {
-	const readHeaderTimeout = 10 * time.Second
+	const (
+		readHeaderTimeout = 4 * time.Second
+		readTimeout       = 20 * time.Second
+		writeTimeout      = 20 * time.Second
+		idleTimeout       = 60 * time.Second
+		maxHeaderBytes    = 1 << 20
+	)
 
 	var err error
 
@@ -69,13 +75,15 @@ func main() {
 	r := config.NewRuntime()
 
 	e := echo.New()
-	e.Validator = config.NewValidator()
-	e.HTTPErrorHandler = domain.ErrorHandler()
 
 	s := &http.Server{
 		Addr:              fmt.Sprintf("%s:%d", r.Host, r.Port),
 		Handler:           e,
 		ReadHeaderTimeout: readHeaderTimeout,
+		ReadTimeout:       readTimeout,
+		WriteTimeout:      writeTimeout,
+		IdleTimeout:       idleTimeout,
+		MaxHeaderBytes:    maxHeaderBytes,
 	}
 
 	domain.Routes(e, t)

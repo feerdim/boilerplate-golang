@@ -10,18 +10,21 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var defaultLogger *Logger
+type DefaultLogger struct {
+	Logger
+	isSentry bool
+}
+
+var defaultLogger *DefaultLogger
 
 func SetDefaultLogger() {
 	var (
-		level       = defaultLogLevel
-		maxDir      = defaultLogCallerMaxDirectory
-		sentryLevel = defaultSentryLevel
+		level  = defaultLogLevel
+		maxDir = defaultLogCallerMaxDirectory
 	)
 
 	level = parseInt(level, os.Getenv("LOG_LEVEL"))
 	maxDir = parseInt(maxDir, os.Getenv("LOG_MAX_DIRECTORY"))
-	sentryLevel = parseInt(sentryLevel, os.Getenv("SENTRY_LEVEL"))
 
 	cw := zerolog.ConsoleWriter{
 		Out:        os.Stdout,
@@ -48,10 +51,9 @@ func SetDefaultLogger() {
 		CallerWithSkipFrameCount(defaultLogCallerSkipFrame).
 		Logger()
 
-	defaultLogger = &Logger{
-		log:         log,
-		level:       level,
-		sentryLevel: sentryLevel,
+	defaultLogger = &DefaultLogger{
+		log:   log,
+		level: level,
 	}
 }
 

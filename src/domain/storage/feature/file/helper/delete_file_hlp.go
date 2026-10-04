@@ -15,14 +15,14 @@ func DeleteFileHelper(
 
 	stg, err := storage.NewStorage(ctx)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error init google cloud storage")
+		log.Ctx(ctx).Error(err, "error init google cloud storage")
 		return
 	}
 	defer util.CloseBuffer(stg.Client)
 
 	err = stg.DeleteFile(ctx, path)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error delete file from google cloud storage")
+		log.Ctx(ctx).Error(err, "error delete file from google cloud storage")
 		return
 	}
 }

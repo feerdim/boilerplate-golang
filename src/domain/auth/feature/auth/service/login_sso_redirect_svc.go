@@ -28,7 +28,7 @@ func (s *Service) ExchangeSSOCodeToSSOUserService(
 
 	token, err := config.Exchange(ctx, request.Code)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error exchange code : "+request.Code)
+		log.Ctx(ctx).Error(err, "error exchange code : "+request.Code)
 		return
 	}
 
@@ -36,32 +36,32 @@ func (s *Service) ExchangeSSOCodeToSSOUserService(
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, helper.GetOAuth2ProviderURL(), nil)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error init sso http request")
+		log.Ctx(ctx).Error(err, "error init sso http request")
 		return
 	}
 
 	res, err := httpClient.Do(req)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error do sso http request")
+		log.Ctx(ctx).Error(err, "error do sso http request")
 		return
 	}
 
 	defer func() {
 		if err = res.Body.Close(); err != nil {
-			log.WithContext(ctx).Error(err, "error close sso http response body")
+			log.Ctx(ctx).Error(err, "error close sso http response body")
 		}
 	}()
 
 	if res.StatusCode != http.StatusOK {
 		err = constant.ErrUnknownSource
-		log.WithContext(ctx).Error(err, "sso http request failed")
+		log.Ctx(ctx).Error(err, "sso http request failed")
 
 		return
 	}
 
 	data, err = helper.GetSSOUser(res.Body)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error get sso user")
+		log.Ctx(ctx).Error(err, "error get sso user")
 		return
 	}
 
@@ -80,7 +80,7 @@ func (s *Service) SyncSSOUserService(
 	err = s.db.Where("email = ?", request.Email).First(&user).Error
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			log.WithContext(ctx).Error(err, "error find user by email : "+request.Email)
+			log.Ctx(ctx).Error(err, "error find user by email : "+request.Email)
 			return
 		}
 
@@ -104,13 +104,13 @@ func (s *Service) SyncSSOUserService(
 	err = util.Transaction(ctx, s.db, func(db *gorm.DB) (err error) {
 		if isUserNotFound {
 			if err = db.Create(&user).Error; err != nil {
-				log.WithContext(ctx).Error(err, "error create user", "user model", user)
+				log.Ctx(ctx).Error(err, "error create user", "user model", user)
 				return
 			}
 		}
 
 		if err = s.db.Create(&data).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error create session", "session model", data)
+			log.Ctx(ctx).Error(err, "error create session", "session model", data)
 			return
 		}
 

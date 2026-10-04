@@ -15,13 +15,13 @@ func GenerateSessionModel(
 ) (data model.Session, err error) {
 	accessToken, err := jwt.GenerateAccessToken(request.ToAccessTokenRequest())
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error generate access token")
+		log.Ctx(ctx).Error(err, "error generate access token")
 		return
 	}
 
 	refreshToken, err := jwt.GenerateRefreshToken(request.ToRefreshTokenRequest())
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error generate refresh token")
+		log.Ctx(ctx).Error(err, "error generate refresh token")
 		return
 	}
 

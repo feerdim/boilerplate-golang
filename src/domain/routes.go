@@ -13,6 +13,9 @@ import (
 )
 
 func Routes(e *echo.Echo, k *toolkit.Toolkit) {
+	e.HTTPErrorHandler = errorHandler()
+	e.Validator = newValidator()
+
 	middleware.TimeoutMiddleware(e)
 	middleware.SentryMiddleware(e)
 	middleware.RecoverMiddleware(e)

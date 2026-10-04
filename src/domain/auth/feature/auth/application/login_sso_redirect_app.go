@@ -26,7 +26,7 @@ func loginSSORedirectApp(s *service.Service) echo.HandlerFunc {
 
 		err = request.DecodeStateData()
 		if err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error decode data", "request", request)
+			log.Ctx(c.Request().Context()).Error(err, "error decode data", "request", request)
 			return api.ResponseRedirectError(c, baseURL, err.Error())
 		}
 

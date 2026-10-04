@@ -20,7 +20,7 @@ func (s *Service) SendForgotPasswordLinkService(
 	user := model.User{Email: request.Email}
 
 	if err = s.db.Where(&user).First(&user).Error; err != nil {
-		err = log.WithContext(ctx).NewError(err, constant.ErrAccountNotFound)
+		err = log.Ctx(ctx).NewError(err, constant.ErrAccountNotFound)
 		return
 	}
 
@@ -28,7 +28,7 @@ func (s *Service) SendForgotPasswordLinkService(
 
 	expiresDuration, err := time.ParseDuration(constant.DefaultForgotPasswordExpires)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error parse duration : "+constant.DefaultForgotPasswordExpires)
+		log.Ctx(ctx).Error(err, "error parse duration : "+constant.DefaultForgotPasswordExpires)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (s *Service) SendForgotPasswordLinkService(
 
 	textHTML, err := util.ParseTemplateHTML(constant.DefaultForgotPasswordTemplateHTML, sendForgotPasswordMailPayload)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error parse template HTML", "send forgot password mail payload", sendForgotPasswordMailPayload)
+		log.Ctx(ctx).Error(err, "error parse template HTML", "send forgot password mail payload", sendForgotPasswordMailPayload)
 		return
 	}
 
@@ -53,13 +53,13 @@ func (s *Service) SendForgotPasswordLinkService(
 			Columns:   []clause.Column{{Name: "email"}, {Name: "type"}},
 			DoUpdates: clause.AssignmentColumns([]string{"token", "expires_at"}),
 		}).Create(&userTokenValidation).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error create or update user validation token", "user token validation model", userTokenValidation)
+			log.Ctx(ctx).Error(err, "error create or update user validation token", "user token validation model", userTokenValidation)
 			return
 		}
 
 		_, _, err = s.mail.SendMail(ctx, "Forgot Password", textHTML, request.Email)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error send forgot password mail to : "+request.Email)
+			log.Ctx(ctx).Error(err, "error send forgot password mail to : "+request.Email)
 			return
 		}
 

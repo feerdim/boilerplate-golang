@@ -20,7 +20,7 @@ func GetRangeHeaderHelper(
 	ranges := strings.Split(rangeHeader, "=")
 	if len(ranges) != invalidRangeHeader || ranges[0] != "bytes" {
 		err = constant.ErrRangeHeaderInvalid
-		log.WithContext(ctx).Error(err, "range header must be 2 and first part must be bytes")
+		log.Ctx(ctx).Error(err, "range header must be 2 and first part must be bytes")
 
 		return
 	}
@@ -28,14 +28,14 @@ func GetRangeHeaderHelper(
 	rangeParts := strings.Split(ranges[1], "-")
 	if len(rangeParts) != invalidRangeHeader {
 		err = constant.ErrRangeHeaderInvalid
-		log.WithContext(ctx).Error(err, "range parts must be 2")
+		log.Ctx(ctx).Error(err, "range parts must be 2")
 
 		return
 	}
 
 	start, err = strconv.ParseInt(rangeParts[0], 10, 64)
 	if err != nil {
-		err = log.WithContext(ctx).NewError(err, constant.ErrRangeHeaderInvalid)
+		err = log.Ctx(ctx).NewError(err, constant.ErrRangeHeaderInvalid)
 		return
 	}
 
@@ -44,14 +44,14 @@ func GetRangeHeaderHelper(
 	} else {
 		end, err = strconv.ParseInt(rangeParts[1], 10, 64)
 		if err != nil {
-			err = log.WithContext(ctx).NewError(err, constant.ErrRangeHeaderInvalid)
+			err = log.Ctx(ctx).NewError(err, constant.ErrRangeHeaderInvalid)
 			return
 		}
 	}
 
 	if start >= end || end >= attrs.Size {
 		err = constant.ErrRequestedRangeNotSatisfiable
-		log.WithContext(ctx).Error(err, "start must be less than end and end must be less than file size")
+		log.Ctx(ctx).Error(err, "start must be less than end and end must be less than file size")
 
 		return
 	}

@@ -43,7 +43,7 @@ func (notif *Notification) PushNotification(title, body, priority string, tokens
 
 	fcmClient, err := notif.App.Messaging(ctx)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error create fcm client")
+		log.Ctx(ctx).Error(err, "error create fcm client")
 		return
 	}
 
@@ -59,12 +59,12 @@ func (notif *Notification) PushNotification(title, body, priority string, tokens
 		},
 	})
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error push notification")
+		log.Ctx(ctx).Error(err, "error push notification")
 		return
 	}
 
 	if response.FailureCount > 0 {
-		log.WithContext(ctx).Error(err, "error count", "count", response.FailureCount)
+		log.Ctx(ctx).Error(err, "error count", "count", response.FailureCount)
 		return
 	}
 

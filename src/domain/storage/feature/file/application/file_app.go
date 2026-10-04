@@ -180,7 +180,7 @@ func openFileApp(s *service.Service) echo.HandlerFunc {
 
 		stg, err := storage.NewStorage(ctx)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error init google cloud storage")
+			log.Ctx(ctx).Error(err, "error init google cloud storage")
 			return
 		}
 		defer util.CloseBuffer(stg.Client)
@@ -188,7 +188,7 @@ func openFileApp(s *service.Service) echo.HandlerFunc {
 		if mimeTypes := strings.Split(data.MimeType, "/"); mimeTypes[0] != "video" {
 			rc, err := stg.GetFile(ctx, request.Path)
 			if err != nil {
-				log.WithContext(ctx).Error(err, "error read file from google cloud storage")
+				log.Ctx(ctx).Error(err, "error read file from google cloud storage")
 				return err
 			}
 
@@ -199,7 +199,7 @@ func openFileApp(s *service.Service) echo.HandlerFunc {
 
 		attrs, err := obj.Attrs(ctx)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error get object attributes")
+			log.Ctx(ctx).Error(err, "error get object attributes")
 			return
 		}
 
@@ -207,7 +207,7 @@ func openFileApp(s *service.Service) echo.HandlerFunc {
 		if rangeHeader == "" {
 			rc, err := obj.NewReader(ctx)
 			if err != nil {
-				log.WithContext(ctx).Error(err, "error create reader")
+				log.Ctx(ctx).Error(err, "error create reader")
 				return err
 			}
 			defer util.CloseBuffer(rc)
@@ -225,7 +225,7 @@ func openFileApp(s *service.Service) echo.HandlerFunc {
 
 		rc, err := obj.NewRangeReader(ctx, start, end-start+1)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error create range reader")
+			log.Ctx(ctx).Error(err, "error create range reader")
 			return constant.ErrFailedStreamFile
 		}
 		defer util.CloseBuffer(rc)

@@ -21,7 +21,7 @@ func readPermissionGroupListApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation get permission list request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation get permission list request")
 			return api.ResponseErrorValidate(c, err)
 		}
 
@@ -49,7 +49,7 @@ func readPermissionGroupDetailApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation get permission detail request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation get permission detail request")
 			return api.ResponseErrorValidate(c, err)
 		}
 
@@ -101,7 +101,7 @@ func updatePermissionGroupApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation update permission request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation update permission request")
 			return api.ResponseErrorValidate(c, err)
 		}
 
@@ -127,7 +127,7 @@ func deletePermissionGroupApp(s *service.Service) echo.HandlerFunc {
 		}
 
 		if err := c.Validate(request); err != nil {
-			log.WithContext(c.Request().Context()).Error(err, "error validation delete permission request")
+			log.Ctx(c.Request().Context()).Error(err, "error validation delete permission request")
 			return api.ResponseErrorValidate(c, err)
 		}
 

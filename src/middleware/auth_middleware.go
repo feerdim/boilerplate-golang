@@ -14,14 +14,12 @@ import (
 )
 
 type AuthMiddleware struct {
-	auth *auth.Auth
+	db *gorm.DB
 }
 
 func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
-	a := auth.NewAuth(db)
-
 	return &AuthMiddleware{
-		auth: a,
+		db: db,
 	}
 }
 
@@ -39,15 +37,17 @@ func (am *AuthMiddleware) ValidateToken(next echo.HandlerFunc) echo.HandlerFunc 
 			return err
 		}
 
-		am.auth.SetClaims(&accessTokenClaims)
+		a := auth.NewAuth(am.db)
 
-		err = am.auth.ValidateSession()
+		a.SetClaims(&accessTokenClaims)
+
+		err = a.ValidateSession()
 		if err != nil {
-			err = log.WithContext(c.Request().Context()).NewError(err, constant.ErrTokenMissing)
+			err = log.Ctx(c.Request().Context()).NewError(err, constant.ErrTokenMissing)
 			return err
 		}
 
-		c.Set("auth", *am.auth)
+		c.Set("auth", a)
 
 		return next(c)
 	}

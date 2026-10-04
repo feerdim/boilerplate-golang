@@ -21,7 +21,7 @@ func (s *Service) LoginSSOService(
 
 	err = json.NewEncoder(encoder).Encode(request)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error encode request", "request", request)
+		log.Ctx(ctx).Error(err, "error encode request", "request", request)
 		return
 	}
 

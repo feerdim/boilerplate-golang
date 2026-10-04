@@ -25,7 +25,7 @@ func (s *Service) ReadRoleListService(
 	statement = statement.Order(request.Order)
 
 	if err = statement.Count(&totalData).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error count role", "request", request)
+		log.Ctx(ctx).Error(err, "error count role", "request", request)
 		return
 	}
 
@@ -34,7 +34,7 @@ func (s *Service) ReadRoleListService(
 	}
 
 	if err = statement.Find(&roles).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find role", "request", request)
+		log.Ctx(ctx).Error(err, "error find role", "request", request)
 		return
 	}
 
@@ -45,14 +45,14 @@ func (s *Service) ReadRoleListService(
 		)
 
 		if err = s.db.Model(&model.PermissionRole{}).Where("role_guid = ?", roles[i].GUID).Pluck("permission_guid", &permissionGUID).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error find permission role")
+			log.Ctx(ctx).Error(err, "error find permission role")
 			return
 		}
 
 		if err = s.db.Model(&model.PermissionGroup{}).Preload("Permissions", func(db *gorm.DB) *gorm.DB {
 			return db.Where("guid IN ?", permissionGUID)
 		}).Find(&permissionGroups).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error find permission group")
+			log.Ctx(ctx).Error(err, "error find permission group")
 			return
 		}
 
@@ -69,7 +69,7 @@ func (s *Service) ReadRoleDetailService(
 	data = model.Role{GUID: request.GUID}
 
 	if err = s.db.Preload("Permissions").First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find role by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find role by guid : "+request.GUID)
 		return
 	}
 
@@ -79,14 +79,14 @@ func (s *Service) ReadRoleDetailService(
 	)
 
 	if err = s.db.Model(&model.PermissionRole{}).Where("role_guid = ?", data.GUID).Pluck("permission_guid", &permissionGUID).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find permission role")
+		log.Ctx(ctx).Error(err, "error find permission role")
 		return
 	}
 
 	if err = s.db.Model(&model.PermissionGroup{}).Preload("Permissions", func(db *gorm.DB) *gorm.DB {
 		return db.Where("guid IN ?", permissionGUID)
 	}).Find(&permissionGroups).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find permission group")
+		log.Ctx(ctx).Error(err, "error find permission group")
 		return
 	}
 
@@ -117,13 +117,13 @@ func (s *Service) CreateRoleService(
 
 	err = util.Transaction(ctx, s.db, func(db *gorm.DB) (err error) {
 		if err = db.Create(&role).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error create role", "role model", role)
+			log.Ctx(ctx).Error(err, "error create role", "role model", role)
 			return
 		}
 
 		if len(permissions) > 0 {
 			if err = db.Model(&role).Association("Permissions").Replace(&permissions); err != nil {
-				log.WithContext(ctx).Error(err, "error association role permission", "permission model", permissions)
+				log.Ctx(ctx).Error(err, "error association role permission", "permission model", permissions)
 				return
 			}
 		}
@@ -156,12 +156,12 @@ func (s *Service) UpdateRoleService(
 
 	err = util.Transaction(ctx, s.db, func(db *gorm.DB) (err error) {
 		if err = db.Updates(&role).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error update role", "role model", role)
+			log.Ctx(ctx).Error(err, "error update role", "role model", role)
 			return
 		}
 
 		if err = db.Model(&role).Association("Permissions").Replace(&permissions); err != nil {
-			log.WithContext(ctx).Error(err, "error association role permission", "permission model", permissions)
+			log.Ctx(ctx).Error(err, "error association role permission", "permission model", permissions)
 			return
 		}
 
@@ -176,7 +176,7 @@ func (s *Service) DeleteRoleService(
 	request api.GUIDPayload,
 ) (err error) {
 	if err = s.db.Delete(&model.Role{GUID: request.GUID}).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete role by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error delete role by guid : "+request.GUID)
 		return
 	}
 

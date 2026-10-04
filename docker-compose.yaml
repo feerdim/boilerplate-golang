@@ -1,12 +1,17 @@
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:15
-    restart: always
+  app:
+    build: .
+    container_name: boilerplate-golang
+    env_file:
+      - .env
     environment:
-      - DATABASE_HOST=127.0.0.1
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=
-      - POSTGRES_DB=boilerplate
+      - DB_HOST=postgres-standalone
     ports:
-      - 5432:5432
+      - "${APP_PORT:-8000}:8000"
+    restart: unless-stopped
+    networks:
+      - shared-net
+
+networks:
+  shared-net:
+    external: true

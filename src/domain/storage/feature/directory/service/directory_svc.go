@@ -24,7 +24,7 @@ func (s *Service) ReadDirectoryListService(
 	statement = statement.Order(request.Order)
 
 	if err = statement.Count(&totalData).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error count directory", "request", request)
+		log.Ctx(ctx).Error(err, "error count directory", "request", request)
 		return
 	}
 
@@ -33,7 +33,7 @@ func (s *Service) ReadDirectoryListService(
 	}
 
 	if err = statement.Find(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find directory", "request", request)
+		log.Ctx(ctx).Error(err, "error find directory", "request", request)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (s *Service) ReadDirectoryDetailService(
 	data = model.Directory{GUID: request.GUID}
 
 	if err = s.db.First(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find directory by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find directory by guid : "+request.GUID)
 		return
 	}
 
@@ -74,7 +74,7 @@ func (s *Service) CreateDirectoryService(
 	}
 
 	if err = s.db.Create(&directory).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error create directory", "directory model", directory)
+		log.Ctx(ctx).Error(err, "error create directory", "directory model", directory)
 		return
 	}
 
@@ -89,7 +89,7 @@ func (s *Service) UpdateDirectoryService(
 	directory := model.Directory{GUID: request.GUID}
 
 	if err = s.db.First(&directory).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find directory by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error find directory by guid : "+request.GUID)
 		return
 	}
 
@@ -105,7 +105,7 @@ func (s *Service) UpdateDirectoryService(
 	}
 
 	if err = s.db.Save(&directory).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error update directory", "directory model", directory)
+		log.Ctx(ctx).Error(err, "error update directory", "directory model", directory)
 		return
 	}
 
@@ -117,7 +117,7 @@ func (s *Service) DeleteDirectoryService(
 	request api.GUIDPayload,
 ) (err error) {
 	if err = s.db.Delete(&model.Directory{GUID: request.GUID}).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error delete directory by guid : "+request.GUID)
+		log.Ctx(ctx).Error(err, "error delete directory by guid : "+request.GUID)
 		return
 	}
 

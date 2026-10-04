@@ -23,7 +23,7 @@ func (s *Service) RefreshTokenService(
 	session := model.Session{GUID: refreshTokenClaims.GUID}
 
 	if err = s.db.First(&session).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error find session by guid : "+refreshTokenClaims.GUID)
+		log.Ctx(ctx).Error(err, "error find session by guid : "+refreshTokenClaims.GUID)
 		return
 	}
 
@@ -34,7 +34,7 @@ func (s *Service) RefreshTokenService(
 	}
 
 	if err = s.db.Updates(&data).Error; err != nil {
-		log.WithContext(ctx).Error(err, "error update session", "session model", data)
+		log.Ctx(ctx).Error(err, "error update session", "session model", data)
 		return
 	}
 

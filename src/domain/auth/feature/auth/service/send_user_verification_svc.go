@@ -18,7 +18,7 @@ func (s *Service) SendUserVerificationService(
 ) (err error) {
 	expiresDuration, err := time.ParseDuration(constant.DefaultUserVerificationExpires)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error parse duration : "+constant.DefaultUserVerificationExpires)
+		log.Ctx(ctx).Error(err, "error parse duration : "+constant.DefaultUserVerificationExpires)
 		return
 	}
 
@@ -36,19 +36,19 @@ func (s *Service) SendUserVerificationService(
 
 	textHTML, err := util.ParseTemplateHTML(constant.DefaultUserVerificationTemplateHTML, sendUserVerificationPayload)
 	if err != nil {
-		log.WithContext(ctx).Error(err, "error parse template HTML", "send user verification payload", sendUserVerificationPayload)
+		log.Ctx(ctx).Error(err, "error parse template HTML", "send user verification payload", sendUserVerificationPayload)
 		return
 	}
 
 	err = util.Transaction(ctx, s.db, func(db *gorm.DB) (err error) {
 		if err = db.Create(&userTokenValidation).Error; err != nil {
-			log.WithContext(ctx).Error(err, "error create user validation token", "user validation token model", userTokenValidation)
+			log.Ctx(ctx).Error(err, "error create user validation token", "user validation token model", userTokenValidation)
 			return
 		}
 
 		_, _, err = s.mail.SendMail(ctx, "User Verification", textHTML, email)
 		if err != nil {
-			log.WithContext(ctx).Error(err, "error send user verification mail to : "+email)
+			log.Ctx(ctx).Error(err, "error send user verification mail to : "+email)
 			return
 		}
 
